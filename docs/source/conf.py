@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'JMC DILATOMETER DAQ'
+project = 'JMC IMPEDANCIMETER DAQ'
 copyright = '2017, Javier M. Cruceño'
 author = 'Javier M. Cruceño'
 
@@ -113,7 +113,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'JMCDilatometerDAQdoc'
+htmlhelp_basename = 'JMCImpedancimeterDAQdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -140,7 +140,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'JMCDilatometerDAQ.tex', 'JMC Dilatometer DAQ Documentation',
+    (master_doc, 'JMCImpedancimeterDAQ.tex', 'JMC Impedancimeter DAQ Documentation',
      'Javier M. Cruceño', 'manual'),
 ]
 
@@ -150,7 +150,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'jmcagilentdaq', 'JMC Dilatometer DAQ Documentation',
+    (master_doc, 'jmcagilentdaq', 'JMC Impedancimeter DAQ Documentation',
      [author], 1)
 ]
 
@@ -161,8 +161,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'JMCDilatometerDAQ', 'JMC Dilatometer DAQ Documentation',
-     author, 'JMCDilatometerDAQ', 'One line description of project.',
+    (master_doc, 'JMCImpedancimeterDAQ', 'JMC Impedancimeter DAQ Documentation',
+     author, 'JMCImpedancimeterDAQ', 'One line description of project.',
      'Miscellaneous'),
 ]
 
