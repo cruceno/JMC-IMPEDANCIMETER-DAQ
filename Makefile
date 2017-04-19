@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = JMCDilatometerDAQ
+SPHINXPROJ    = JMCImpedancimeterDAQ
 SOURCEDIR     = ./docs/source
 BUILDDIR      = build
 GH_PAGES_SOURCES = ./docs/source
