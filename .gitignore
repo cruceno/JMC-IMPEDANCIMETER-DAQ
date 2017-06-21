@@ -92,3 +92,5 @@ ENV/
 .pydevproject
 settings
 
+/lee_serie4.py
+/funciones.py
