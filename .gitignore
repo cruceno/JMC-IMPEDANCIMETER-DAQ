@@ -92,4 +92,9 @@ ENV/
 .pydevproject
 settings
 
+<<<<<<< HEAD
 /borrar/
+=======
+/lee_serie4.py
+/funciones.py
+>>>>>>> branch 'master' of https://github.com/cruceno/JMC-IMPEDANCIMETER-DAQ.git
