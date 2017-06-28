@@ -5,7 +5,7 @@ Created on 22 dic. 2016
 '''
 import serial
 import time
-from JMCImpedancimeterDAQ.instrument.funciones import *
+from hp4192a.instrument.funciones import *
    
 def funcion(puerto):
     ser = serial.Serial(puerto)     # open serial port
@@ -16,25 +16,26 @@ def funcion(puerto):
         if first:
             ser.readline()
             first=False
-        cadena = ser.read(31)
-        print (cadena)
+        cadena = ser.readline()
         try:
             frecuencia = extraer_f(cadena)
         except:
             frecuencia = 'E'
         try:
             display_A = extraer_A(cadena)
-            unidad_AA = unidad_A(cadena)
+
         except:
             display_A = 'E'
-            unidad_AA = 'E' 
+ 
         try:  
             display_B = extraer_B(cadena)
-            unidad_BB = unidad_B(cadena)
+
         except:
             display_B = 'E'
-            unidad_BB = 'E'
-        print('frecuencia: ', frecuencia, ' Display A', display_A, unidad_AA, ' Display B', display_B, unidad_BB)
+        data=[frecuencia,display_A, display_B]
+        if data[1][1][0] and not data[1][1][1]:
+            print ("Con errores")
+        
+        print('frecuencia: ', frecuencia, ' Display A', display_A, ' Display B', display_B)
     ser.close()
-    
-funcion("/dev/ttyUSB0")
+funcion("COM3")

@@ -3,16 +3,19 @@ Created on 22 dic. 2016
 
 @author: Marcos
 '''
-import struct
 
+orders={'p':('p',10**-12),
+        'n':('n',10**-9),
+        'u':('u',10**-6), 
+        'm':('m',10**-3),
+        'base':('',1),
+        'k':('k',10**3),
+        'M':('M',10**6)
+        }
 def valor(siete_segmento):
-   # print (siete_segmento)
+    # print (siete_segmento)
     if siete_segmento > 128:
-        coma = 1
         siete_segmento -= 128        
-    else: 
-        coma = 0
-
     numero={63:0,
             6:1,
             91:2,
@@ -104,7 +107,8 @@ def extraer_A(cadena):
     else:
         decimal=1    
     display_a = (q/decimal)*f1
-    return display_a 
+    unidad = unidad_A(cadena)
+    return (display_a, unidad) 
 
 def extraer_B(cadena):
     cadena1 = bytearray(cadena)
@@ -142,7 +146,8 @@ def extraer_B(cadena):
     else:
         decimal=1
     display_b = s*(q/decimal)
-    return display_b       
+    unidad = unidad_B(cadena)
+    return (display_b, unidad)        
 
 def unidad_A(cadena):
     if cadena[28] & 0b00000001:
@@ -159,20 +164,20 @@ def unidad_A(cadena):
         unidad=""
     
     if cadena[27] & 0b00000001:
-        orden="k"
+        orden=orders['k']
     elif cadena[27] & 0b00000010:
-        orden="m"
+        orden=orders['m']
     elif cadena[27] & 0b00000100:
-        orden="u"
+        orden=orders['u']
     elif cadena[27] & 0b00001000:
-        orden="n"
+        orden=orders['n']
     elif cadena[27] & 0b00010000:
-        orden="p"
+        orden=orders['p']
     elif cadena[27] & 0b00100000:
-        orden="M"
+        orden=orders['M']
     else:
-        orden=""
-    return (orden+unidad)
+        orden=orders['base']
+    return (orden,unidad)
     
     
 def unidad_B(cadena):
@@ -196,14 +201,14 @@ def unidad_B(cadena):
         unidad=""
     
     if cadena[29] & 0b00000001:
-        orden="k"
+        orden = orders['k']
     elif cadena[29] & 0b00000010:
-        orden="m"
+        orden = orders['m']
     elif cadena[29] & 0b00000100:
-        orden="u"
+        orden = orders['u']
     else:
-        orden=""
-    return (orden+unidad)
+        orden=orders['base']
+    return (orden,unidad)
     
     
     
