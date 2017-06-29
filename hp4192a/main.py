@@ -38,6 +38,7 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
                    QtCore.SIGNAL('splashUpdate(QString, int)'),
                    self.splash.showMessage)
         self.setupUi(self)
+        self.set_ui_display_orders()
         self.scaner= daq_worker()
         # Cargamos archivo de configuracion predeterminado
         # Estudiar caso en que el archivo de configuracion no exista
@@ -159,6 +160,25 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
                 # Agregar configuraciones disponibles al campo de seleccion
                 self.cbx_serial_bytesizes.addItem(str(bytesize), bytesize)
     
+    def set_ui_display_orders(self):
+        from hp4192a.instrument.funciones import orders as orders
+        self.cbx_file_display_a_order.addItem('Pico', orders['p'][1])
+        self.cbx_file_display_b_order.addItem('Pico', orders['p'][1])
+        self.cbx_file_display_a_order.addItem('Nano', orders['n'][1])
+        self.cbx_file_display_b_order.addItem('Nano', orders['n'][1])
+        self.cbx_file_display_a_order.addItem('Micro', orders['u'][1])
+        self.cbx_file_display_b_order.addItem('Micro', orders['u'][1])
+        self.cbx_file_display_a_order.addItem('Mili', orders['m'][1])
+        self.cbx_file_display_b_order.addItem('Mili', orders['m'][1])
+        self.cbx_file_display_a_order.addItem('Base', orders['base'][1])
+        self.cbx_file_display_a_order.setCurrentIndex(4)
+        self.cbx_file_display_b_order.addItem('Base', orders['base'][1])
+        self.cbx_file_display_b_order.setCurrentIndex(4)
+        self.cbx_file_display_a_order.addItem('Kilo', orders['k'][1])
+        self.cbx_file_display_b_order.addItem('Kilo', orders['k'][1])        
+        self.cbx_file_display_a_order.addItem('Mega', orders['M'][1])
+        self.cbx_file_display_b_order.addItem('Mega', orders['M'][1])
+        
     @QtCore.pyqtSlot()
     def on_cbx_serial_port_currentIndexChanged(self):
         port = self.cbx_serial_port.itemData(self.cbx_serial_port_currentIndex())
@@ -204,11 +224,50 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
         pass
     
     @QtCore.pyqtSlot()
-    def incoming_data(self):
-        pass
+    def incoming_data(self, data):
+        
+        if os.path.isfile(self.le_outputfile.text()):
+            ofile=open(self.le_outputfile.text(),'a')
+        else:
+            ofile=open(self.le_outputfile.text(),'w')
+            
+        sep = self.config['fileFormat']['colum_sep']
+        da_order = self.cbx_file_display_a_order.itemData(self.cbx_file_display_a_order.currentIndex())
+        db_order = self.cbx_file_display_b_order.itemData(self.cbx_file_display_b_order.currentIndex())
+        # Set correct order for display B
+        medorder=data[2][1][0][1] #Measure order
+        
+        if medorder == da_order:
+            pass
+        elif medorder < da_order:
+            data[2][0] = data[2][0]*(da_order/medorder)
+            
+        elif medorder > da_order:
+            data[2][0]=data[2][0]/(medorder/da_order)
+            
+        # Set correct order for display B
+        medorder=data[3][1][0][1] #Measure order
+        if medorder == db_order:
+            pass
+        elif medorder < db_order:
+            data[3][0]=data[3][0]*(db_order/medorder)
+            
+        elif medorder > db_order:
+            data[3][0]=data[3][0]/(medorder/db_order)
+            
+        line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
+        ofile.write(line)
+        ofile.close()
     
     def check_data_integrity(self, data):
-        if data[2][1][0] and not data[2][1][1]:
+        frequency=data[1]
+        displayA=data[2]
+        displayB=data[3]
+        
+        if displayA[1][0][0] and not displayA[1][1]:
+            return False
+        
+        if displayB[1][0][0] and not displayB[1][1]:
             return False
         
     @QtCore.pyqtSlot()
@@ -227,7 +286,7 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
     def on_tlb_output_file_released(self):
         filepath=QtGui.QFileDialog.getSaveFileName(self, 'Select Output File', os.path.expanduser('~'))
         self.le_outputfile.setText(filepath)
-    
+        
 def main():
     app = QtGui.QApplication(sys.argv)
     app.processEvents()
