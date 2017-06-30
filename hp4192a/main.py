@@ -32,7 +32,11 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
         from hp4192a.gui.splash import SplashScreen
         pixmap = QtGui.QPixmap('./gui/images/splash.png')
         self.splash = SplashScreen(pixmap)
-        self.splash.setTitle('HP 4192a LF DAQ')
+        self.splash.setTitle('HP 4192a LF')
+        self.splash.moveTitle(46*self.splash.width()/100,
+                              10*self.splash.height()/100,
+                              50*self.splash.width()/100,
+                              30*self.splash.height()/100)
         self.splash.show()
         self.splash.connect(self,
                    QtCore.SIGNAL('splashUpdate(QString, int)'),
@@ -67,7 +71,6 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
         # Conectar señales y funciones
         self.connect(self.scaner, QtCore.SIGNAL("readsignal(PyQt_PyObject)"), self.incoming_data)
         #self.connect(self.scaner, QtCore.SIGNAL("msgsignal(PyQt_PyObject)"), self.change_messagge)
-        self.connect(self.scaner, QtCore.SIGNAL("finished()"), self.update_ui)
 
         self.scaner.moveToThread(self.thread)
         
@@ -225,18 +228,66 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
     
     @QtCore.pyqtSlot()
     def incoming_data(self, data):
+        sep = '\t' if self.config['fileFormat']['column_sep'] == 'Tab' else ','
+        rawpath=self.le_outputfile.text()+'.raw'
         
-        if os.path.isfile(self.le_outputfile.text()):
-            ofile=open(self.le_outputfile.text(),'a')
-        else:
-            ofile=open(self.le_outputfile.text(),'w')
+        try: 
+            x, f, da, db = np.genfromtxt(rawpath,
+                                         dtype='float',
+                                         delimiter=sep,
+                                         usecols=(0,1,2,3),
+                                         unpack=True
+                                         )
             
-        sep = self.config['fileFormat']['colum_sep']
+            
+            rawfile = open(rawpath,'a')
+                
+            if self.check_data_units_integrity(data):
+                
+                data = self.set_untis_order(data)
+                if self.check_for_error_values([data[1],data[2][0],data[3][0]], [f[-1],da[-1],db[-1]]):
+                
+                    line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
+                    rawfile.write(line)
+                    rawfile.close()
+        except:
+            self.change_message('Esperando datos validos para plotear')
+            if self.check_data_units_integrity(data):
+                rawfile = open(rawpath,'a')
+                line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
+        
+                rawfile.write(line)
+                rawfile.close() 
+            
+
+
+    def check_for_error_values(self, data, data2):
+        
+        if abs (data[0]-data2[0]) < (10*100/abs(data[0])):
+            pass
+        else:
+            self.change_message('Medicion con errores frecuencia: {0:.4f} , {0:.4f} , {0:.4f}' .format(data[0], data2[0] , 10*100/data[0]))
+            return False
+        if abs (data[1]-data2[1]) < (10*100/abs(data[1])):
+            pass
+        else:
+            self.change_message('Medicion con erroresdisplay A: {0:.4f} , {0:.4f} ,{0:.4f}' .format( data[1], data2[1] , 10*100/data[1]))
+            return False
+        if abs (data[2]-data2[2]) < (10*100/abs(data[2])):
+            pass
+        else:
+            self.change_message('Medicion con errores display B: {0:.4f} , {0:.4f} , {0:.4f}' .format( data[2], data2[2] , 10*100/data[2]))
+            return False        
+        return True
+    
+    def set_untis_order(self,data):   
         da_order = self.cbx_file_display_a_order.itemData(self.cbx_file_display_a_order.currentIndex())
         db_order = self.cbx_file_display_b_order.itemData(self.cbx_file_display_b_order.currentIndex())
+        
+        
+        
         # Set correct order for display B
         medorder=data[2][1][0][1] #Measure order
-        
         if medorder == da_order:
             pass
         elif medorder < da_order:
@@ -254,13 +305,10 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
             
         elif medorder > db_order:
             data[3][0]=data[3][0]/(medorder/db_order)
-            
-        line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
-        ofile.write(line)
-        ofile.close()
-    
-    def check_data_integrity(self, data):
-        frequency=data[1]
+        
+        return data
+    def check_data_units_integrity(self, data):
+
         displayA=data[2]
         displayB=data[3]
         
@@ -269,19 +317,43 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
         
         if displayB[1][0][0] and not displayB[1][1]:
             return False
+
+        return True
+    
+    def enable_ui_controls(self, enable):
         
+        self.plot_settings.setEnabled(enable)
+        self.save_data_settings.setEnabled(enable)
+        self.config_inputs.setEnabled(enable)
+        
+    def change_message(self, msg):
+        self.statusBar().showMessage(msg, 5000) 
+           
     @QtCore.pyqtSlot()
     def on_pb_start_pressed(self):
-        pass
-    
-    @QtCore.pyqtSlot()
-    def on_pb_monitor_pressed(self):
-        pass
-    
-    @QtCore.pyqtSlot()
-    def on_pb_reset_pressed(self):
-        pass    
-    
+        if self.pb_start.text() == 'Start':
+            try:
+                ofile = open(self.le_outputfile.text(),'w')
+            except:
+                self.change_message('Seleccione un archivo de salida válido')
+                return False
+        
+            self.pb_start.setEnabled(False)
+            self.pb_start.setText('Stop')
+            self.scaner.adquire(0)
+            self.enable_ui_controls(False)
+            self.pb_start.setEnabled(True)
+            
+        elif self.pb_start.text()=='Stop':
+            self.pb_start.setEnabled(False)
+            self.scaner.exiting=True
+            while self.scaner.isRunning():
+                self.change_message('Terminando proceso')
+            self.enable_ui_controls(True)
+            self.pb_start.setText('Start')
+            self.pb_start.setEnabled(True)
+            
+        
     @QtCore.pyqtSlot()
     def on_tlb_output_file_released(self):
         filepath=QtGui.QFileDialog.getSaveFileName(self, 'Select Output File', os.path.expanduser('~'))

@@ -32,8 +32,6 @@ class daq_worker(QtCore.QThread):
         self.ser.open()
 
         while not self.exiting:
-            
-            self.ser.open()
             t = time()-x_zero
             
             values = self.ser.readline()
