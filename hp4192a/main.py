@@ -43,27 +43,29 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
                    self.splash.showMessage)
         self.setupUi(self)
         self.set_ui_display_orders()
-        self.scaner= daq_worker()
+        
         # Cargamos archivo de configuracion predeterminado
         # Estudiar caso en que el archivo de configuracion no exista
         self.config = ConfigObj('hp4192a.ini')
         
         # Inicializando base de ploteo para daq mainplot Data Analisys Tab
-        self.vbl_gb_plota = QtGui.QVBoxLayout(self.gb_plota)
-        self.plota_canvas = PlotCanvas(self.gb_plota)
+        self.vbl_gb_plota = QtGui.QVBoxLayout(self.tab_plot_a)
+        self.plota_canvas = PlotCanvas(self.tab_plot_a)
         self.vbl_gb_plota.insertWidget(0, self.plota_canvas)
 
         
         # Inicializando base de ploteo para daq mainplot Data Analisys Tab
-        self.vbl_gb_plotb = QtGui.QVBoxLayout(self.gb_plotb)
-        self.plotb_canvas = PlotCanvas(self.gb_plotb)
+        self.vbl_gb_plotb = QtGui.QVBoxLayout(self.tab_plot_b)
+        self.plotb_canvas = PlotCanvas(self.tab_plot_b)
         self.vbl_gb_plotb.insertWidget(0, self.plotb_canvas)
 
         
     def connect_thread(self):
+        
         self.emit(QtCore.SIGNAL("splashUpdate(QString, int)"),
                   'Connect to thread . . .',
                   132)
+        self.scaner= daq_worker()
         # Configurar subproceso encargado de la comunicacion con el OMA
         self.thread = QtCore.QThread()
         self.thread.started.connect(self.scaner.adquire)
@@ -230,61 +232,69 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
     def incoming_data(self, data):
         sep = '\t' if self.config['fileFormat']['column_sep'] == 'Tab' else ','
         rawpath=self.le_outputfile.text()+'.raw'
-        
-        try: 
+        if os.path.isfile(rawpath):
+            rawfile = open(rawpath,'r')
+        else:
+            rawfile= open(rawpath,'w')
+            rawfile.close()
+            rawfile=open(rawpath, 'r')
+        if len(rawfile.readlines()) >= 5:
+            rawfile.close()
             x, f, da, db = np.genfromtxt(rawpath,
                                          dtype='float',
                                          delimiter=sep,
                                          usecols=(0,1,2,3),
                                          unpack=True
                                          )
-            
-            
-            rawfile = open(rawpath,'a')
                 
             if self.check_data_units_integrity(data):
-                
                 data = self.set_untis_order(data)
                 if self.check_for_error_values([data[1],data[2][0],data[3][0]], [f[-1],da[-1],db[-1]]):
-                
-                    line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
+                    rawfile = open(rawpath,'a')
+                    line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.12f}".format(data[2][0])+sep+"{0:.12f}".format(data[3][0])+'\n'
                     rawfile.write(line)
-                    rawfile.close()
-        except:
+        else:
+            rawfile.close()
             self.change_message('Esperando datos validos para plotear')
             if self.check_data_units_integrity(data):
                 rawfile = open(rawpath,'a')
-                line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
-        
+                data = self.set_untis_order(data)
+                line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.12f}".format(data[2][0])+sep+"{0:.12f}".format(data[3][0])+'\n'
+    
                 rawfile.write(line)
-                rawfile.close() 
-            
-
-
-    def check_for_error_values(self, data, data2):
+        rawfile.close()
         
-        if abs (data[0]-data2[0]) < (10*100/abs(data[0])):
+    def check_for_error_values(self, data, data2):
+        f_start = self.dsb_f_start.value()
+        f_stop = self.dsb_f_stop.value()
+        f_steep = self.dsb_f_step.value()
+         
+        if abs (abs(data[0])-abs(data2[0])) < (10*abs(data[0])/100):
             pass
         else:
-            self.change_message('Medicion con errores frecuencia: {0:.4f} , {0:.4f} , {0:.4f}' .format(data[0], data2[0] , 10*100/data[0]))
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[0])+' , '+'{0:.12f}'.format(data2[0])+' , {0:.12f}'.format(10*data[0]/100)
+            print (msg)
+            self.change_message(msg)
             return False
-        if abs (data[1]-data2[1]) < (10*100/abs(data[1])):
+        if abs(abs(data[1])-abs(data2[1])) < (10*abs(data[1])/100):
             pass
         else:
-            self.change_message('Medicion con erroresdisplay A: {0:.4f} , {0:.4f} ,{0:.4f}' .format( data[1], data2[1] , 10*100/data[1]))
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[1])+' , '+'{0:.12f}'.format(data2[1])+' , {0:.12f}'.format(10*data[1]/100)
+            print (msg)
+            self.change_message(msg)
             return False
-        if abs (data[2]-data2[2]) < (10*100/abs(data[2])):
+        if abs (abs(data[2])-abs(data2[2])) < (10*abs(data[2])/100):
             pass
         else:
-            self.change_message('Medicion con errores display B: {0:.4f} , {0:.4f} , {0:.4f}' .format( data[2], data2[2] , 10*100/data[2]))
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[2])+' , '+'{0:.12f}'.format(data2[2])+' , {0:.12f}'.format(10*data[2]/100)
+            print (msg)
+            self.change_message(msg)
             return False        
         return True
     
     def set_untis_order(self,data):   
         da_order = self.cbx_file_display_a_order.itemData(self.cbx_file_display_a_order.currentIndex())
         db_order = self.cbx_file_display_b_order.itemData(self.cbx_file_display_b_order.currentIndex())
-        
-        
         
         # Set correct order for display B
         medorder=data[2][1][0][1] #Measure order
@@ -337,7 +347,15 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
             except:
                 self.change_message('Seleccione un archivo de salida válido')
                 return False
-        
+            if self.dsb_f_start.value() == self.dsb_f_stop.value():
+                self.change_message('Corregir Sweep de Frecuencio START = END')
+                return False
+            if self.dsb_f_start.value() > self.dsb_f_stop.value():
+                self.change_message('Corregir Sweep de Frecuencio START > END')
+                return False
+            if self.dsb_f_step.value() == 0 :
+                self.change_message('Corregir Sweep de Frecuencio STEEP = 0')
+                return False
             self.pb_start.setEnabled(False)
             self.pb_start.setText('Stop')
             self.scaner.adquire(0)
@@ -348,7 +366,10 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
             self.pb_start.setEnabled(False)
             self.scaner.exiting=True
             while self.scaner.isRunning():
-                self.change_message('Terminando proceso')
+                self.change_message('Terminando última medicion')
+            self.scaner.terminate()
+            self.connect_thread()
+            self.get_serial_config()
             self.enable_ui_controls(True)
             self.pb_start.setText('Start')
             self.pb_start.setEnabled(True)
@@ -368,9 +389,10 @@ def main():
         # Do something which takes some time.
         t = time.time()
         if i == 10:
-            DAQ.get_serial_config()
-        if i == 80:
             DAQ.connect_thread()
+            
+        if i == 80:
+            DAQ.get_serial_config()
         while time.time() < t + 0.03:
             app.processEvents()
     DAQ.show()
