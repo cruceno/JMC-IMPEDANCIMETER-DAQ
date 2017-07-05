@@ -79,7 +79,7 @@ def extraer_f(cadena):
 def extraer_A(cadena):
     
     cadena1 = bytearray(cadena)
-    print (len(cadena1))
+
     if cadena1[31] == 3:
         cadena1[31]=6
         f1=1

@@ -42,7 +42,6 @@ def funcion(puerto, da_order, db_order):
         
         if data[2][1][0][0] and not data[2][1][1]:
             error=True
-        print(data[2][1][0][1])
         if data[2][1][0][1] == da_order:
             pass
         elif data[2][1][0][1] < da_order:
@@ -61,10 +60,11 @@ def funcion(puerto, da_order, db_order):
         elif data[3][1][0][1] > db_order:
             data[3][0]=data[3][0]/(data[3][1][0][1]/db_order)
             
-        line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.4f}".format(data[2][0])+sep+"{0:.4f}".format(data[3][0])+'\n'
+        line = str(data[0])+sep+"{0:.6f}".format(data[1])+sep+"{0:.12f}".format(data[2][0])+sep+"{0:.12f}".format(data[3][0])+'\n'
+        print (line)
         ofile.write(line)
         ofile.close()
         
-        print('frecuencia: ',data[1], ' Display A', "{0:.4f}".format(data[2][0]), ' Display B', "{0:.4f}".format(data[3][0]))
+        #print('frecuencia: {0:.6f} '.format(data[1]), ' Display A', "{0:.12f}".format(data[2][0]), ' Display B', "{0:.12f}".format(data[3][0]))
     ser.close()
 funcion("COM3", 1, 1)
