@@ -79,7 +79,7 @@ def extraer_f(cadena):
 def extraer_A(cadena):
     
     cadena1 = bytearray(cadena)
-    print (len(cadena1))
+
     if cadena1[31] == 3:
         cadena1[31]=6
         f1=1
@@ -108,7 +108,7 @@ def extraer_A(cadena):
         decimal=1    
     display_a = (q/decimal)*f1
     unidad = unidad_A(cadena)
-    return (display_a, unidad) 
+    return [display_a, unidad] 
 
 def extraer_B(cadena):
     cadena1 = bytearray(cadena)
@@ -147,7 +147,7 @@ def extraer_B(cadena):
         decimal=1
     display_b = s*(q/decimal)
     unidad = unidad_B(cadena)
-    return (display_b, unidad)        
+    return [display_b, unidad]        
 
 def unidad_A(cadena):
     if cadena[28] & 0b00000001:

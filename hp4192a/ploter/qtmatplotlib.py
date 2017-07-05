@@ -27,15 +27,10 @@ class canvas(FigureCanvas):
         self.setParent(parent)
         self.fig.canvas.draw()
 
-    def plotoma(self, espectro, plot_bkg=False, substract_bkg=False):
-        x = espectro.x
-        y = espectro.getSpec(substract_bkg)
-        bkg = espectro.bkg
+    def plot(self, x,y):
         
         # Dibujar Curva
         self.axes.plot(x, y, color='b')
-        if plot_bkg:
-            self.axes.plot(x, bkg, color='g')
         self.fig.canvas.draw()
 
         

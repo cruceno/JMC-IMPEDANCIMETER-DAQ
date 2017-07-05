@@ -15,105 +15,31 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/logo-symbol-64x64.png</normaloff>../../../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/logo-symbol-64x64.png</iconset>
+    <normaloff>../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/logo-symbol-64x64.png</normaloff>../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/logo-symbol-64x64.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="experimental_setup">
        <attribute name="title">
         <string>Experimental Setup</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_15">
-        <item row="0" column="1" colspan="3">
-         <widget class="QGroupBox" name="gb_plota">
-          <property name="title">
-           <string>Plot A</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QGroupBox" name="gb_lcd_freq">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Frequency</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_freq"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="1" colspan="3">
-         <widget class="QGroupBox" name="gb_plotb">
-          <property name="title">
-           <string>Plot B</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QGroupBox" name="gb_lcd_a">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Display A</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_a"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QGroupBox" name="gb_lcd_b">
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>100</height>
-           </size>
-          </property>
-          <property name="title">
-           <string>Display B</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLCDNumber" name="lcd_b"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="0" column="0" rowspan="3">
+        <item row="0" column="0" rowspan="2">
          <widget class="QToolBox" name="tbx_settings">
           <property name="minimumSize">
            <size>
-            <width>260</width>
+            <width>290</width>
             <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>260</width>
+            <width>290</width>
             <height>16777215</height>
            </size>
           </property>
@@ -121,15 +47,15 @@
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="plot_settings">
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
-             <width>260</width>
-             <height>415</height>
+             <y>-204</y>
+             <width>273</width>
+             <height>620</height>
             </rect>
            </property>
            <attribute name="label">
@@ -162,7 +88,28 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="cbx_x_plot_a"/>
+                <widget class="QComboBox" name="cbx_x_plot_a">
+                 <item>
+                  <property name="text">
+                   <string>Display A</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Display B</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Frequency</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Time</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_2">
@@ -172,7 +119,28 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="cbx_y_plot_a"/>
+                <widget class="QComboBox" name="cbx_y_plot_a">
+                 <item>
+                  <property name="text">
+                   <string>Display A</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Display B</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Frequency</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Time</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
               </layout>
              </widget>
@@ -197,7 +165,28 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="cbx_x_plot_b"/>
+                <widget class="QComboBox" name="cbx_x_plot_b">
+                 <item>
+                  <property name="text">
+                   <string>Display A</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Display B</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Frequency</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Time</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_4">
@@ -207,12 +196,138 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="cbx_y_plot_b"/>
+                <widget class="QComboBox" name="cbx_y_plot_b">
+                 <item>
+                  <property name="text">
+                   <string>Display A</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Display B</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Frequency</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Time</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
               </layout>
              </widget>
             </item>
             <item row="2" column="0">
+             <widget class="QGroupBox" name="gb_error_filters">
+              <property name="title">
+               <string>Error Filters</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_13">
+               <item row="0" column="1">
+                <widget class="QGroupBox" name="gb_freq_scanning">
+                 <property name="maximumSize">
+                  <size>
+                   <width>249</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="title">
+                  <string>Frecuency Sweep (kHz)</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_20">
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_f_start">
+                    <property name="minimumSize">
+                     <size>
+                      <width>110</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_12">
+                    <property name="text">
+                     <string>Stop</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_f_stop"/>
+                  </item>
+                  <item row="4" column="0">
+                   <widget class="QLabel" name="label_13">
+                    <property name="text">
+                     <string>Step</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_f_step"/>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_11">
+                    <property name="maximumSize">
+                     <size>
+                      <width>249</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Start</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QGroupBox" name="gb_display_b_error_filter">
+                 <property name="title">
+                  <string>Display B</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_11">
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_10">
+                    <property name="text">
+                     <string>Valid data range (%)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QDoubleSpinBox" name="dsb_db_valid_range"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QGroupBox" name="gb_display_a_error_filter">
+                 <property name="title">
+                  <string>Display A</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_10">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>Valid data range (%)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QDoubleSpinBox" name="dsb_da_valid_range"/>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="5" column="0">
              <widget class="QGroupBox" name="gb_impedance">
               <property name="maximumSize">
                <size>
@@ -305,7 +420,7 @@
               </layout>
              </widget>
             </item>
-            <item row="3" column="0">
+            <item row="6" column="0">
              <widget class="QGroupBox" name="gb_capacitance">
               <property name="maximumSize">
                <size>
@@ -410,7 +525,7 @@
               </layout>
              </widget>
             </item>
-            <item row="4" column="0">
+            <item row="7" column="0">
              <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -430,8 +545,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>260</width>
-             <height>415</height>
+             <width>290</width>
+             <height>416</height>
             </rect>
            </property>
            <attribute name="label">
@@ -449,15 +564,15 @@
              <widget class="QLineEdit" name="le_outputfile"/>
             </item>
             <item row="5" column="0">
-             <widget class="QComboBox" name="cbx_file_display_b_units"/>
+             <widget class="QComboBox" name="cbx_file_display_b_order"/>
             </item>
             <item row="3" column="0">
-             <widget class="QComboBox" name="cbx_file_display_a_units"/>
+             <widget class="QComboBox" name="cbx_file_display_a_order"/>
             </item>
             <item row="4" column="0">
              <widget class="QLabel" name="label_20">
               <property name="text">
-               <string>Display B units</string>
+               <string>Display B order</string>
               </property>
              </widget>
             </item>
@@ -468,28 +583,18 @@
               </property>
               <property name="icon">
                <iconset>
-                <normaloff>../../../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/folder_black.png</normaloff>../../../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/folder_black.png</iconset>
+                <normaloff>../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/folder_black.png</normaloff>../../../../../../home/javier/z/dev/git/JMC-IMPEDANCIMETER-DAQ/JMCImpedancimeterDAQ/gui/images/folder_black.png</iconset>
               </property>
              </widget>
             </item>
             <item row="2" column="0">
              <widget class="QLabel" name="label_19">
               <property name="text">
-               <string>Display A units</string>
+               <string>Display A order</string>
               </property>
              </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QComboBox" name="cbx_file_freq_units"/>
             </item>
             <item row="6" column="0">
-             <widget class="QLabel" name="label_21">
-              <property name="text">
-               <string>Frequency units</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
              <spacer name="verticalSpacer_2">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -509,36 +614,28 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>260</width>
-             <height>415</height>
+             <width>290</width>
+             <height>416</height>
             </rect>
            </property>
            <attribute name="label">
             <string>Control</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_17">
-            <item row="1" column="0" colspan="2">
+            <item row="0" column="0" colspan="2">
              <widget class="QPushButton" name="pb_start">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>100</height>
+               </size>
+              </property>
               <property name="text">
                <string>Start</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="pb_monitor">
-              <property name="text">
-               <string>Monitor</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="pb_reset">
-              <property name="text">
-               <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
+            <item row="1" column="0" colspan="2">
              <spacer name="verticalSpacer_3">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -555,11 +652,133 @@
           </widget>
          </widget>
         </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="gb_lcd_a">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Display A</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_a">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>67</height>
+              </size>
+             </property>
+             <property name="numDigits">
+              <number>7</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QGroupBox" name="gb_lcd_b">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Display B</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_b">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>67</height>
+              </size>
+             </property>
+             <property name="numDigits">
+              <number>7</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QGroupBox" name="gb_lcd_freq">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Frequency</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLCDNumber" name="lcd_freq">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>67</height>
+              </size>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>false</bool>
+             </property>
+             <property name="numDigits">
+              <number>7</number>
+             </property>
+             <property name="digitCount">
+              <number>7</number>
+             </property>
+             <property name="mode">
+              <enum>QLCDNumber::Dec</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="1" colspan="3">
+         <widget class="QTabWidget" name="Plot_Tabs">
+          <property name="tabPosition">
+           <enum>QTabWidget::West</enum>
+          </property>
+          <property name="tabShape">
+           <enum>QTabWidget::Rounded</enum>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="tab_plot_a">
+           <attribute name="title">
+            <string>Plot A</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_plot_b">
+           <attribute name="title">
+            <string>Plot B</string>
+           </attribute>
+          </widget>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="config_inputs">
        <attribute name="title">
-        <string>Config inputs</string>
+        <string>Config RS232</string>
        </attribute>
        <widget class="QGroupBox" name="gb_serial_config">
         <property name="geometry">
@@ -655,138 +874,6 @@
          </item>
         </layout>
        </widget>
-       <widget class="QGroupBox" name="gb_error_filters">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>210</y>
-          <width>647</width>
-          <height>142</height>
-         </rect>
-        </property>
-        <property name="title">
-         <string>Error Filters</string>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_13">
-         <item row="0" column="0">
-          <widget class="QGroupBox" name="gb_display_a_error_filter">
-           <property name="title">
-            <string>Display A</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_10">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Valid data range (%)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="dsb_da_valid_range"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>Polynom order</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sb_da_poly_order"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_12">
-              <property name="text">
-               <string>Sample values</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="sb_da_sample_values"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QGroupBox" name="gb_display_b_error_filter">
-           <property name="title">
-            <string>Display B</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_11">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Valid data range (%)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="dsb_db_valid_range"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_13">
-              <property name="text">
-               <string>Polynom order</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sb_db_poly_order"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>Sample values</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="sb_db_sample_values"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QGroupBox" name="gb_freq_error_filter">
-           <property name="title">
-            <string>Frequency</string>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_12">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>Valid data range (%)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QDoubleSpinBox" name="dsb_f_valid_range"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_16">
-              <property name="text">
-               <string>Polynom order</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sb_f_poly_order"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>Sample values</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QSpinBox" name="sb_f_sample_values"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
       </widget>
      </widget>
     </item>
@@ -798,7 +885,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>31</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

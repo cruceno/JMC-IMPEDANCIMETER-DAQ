@@ -32,41 +32,55 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
         from hp4192a.gui.splash import SplashScreen
         pixmap = QtGui.QPixmap('./gui/images/splash.png')
         self.splash = SplashScreen(pixmap)
-        self.splash.setTitle('HP 4192a LF DAQ')
+        self.splash.setTitle('HP 4192a LF')
+        self.splash.moveTitle(46*self.splash.width()/100,
+                              10*self.splash.height()/100,
+                              50*self.splash.width()/100,
+                              30*self.splash.height()/100)
         self.splash.show()
         self.splash.connect(self,
                    QtCore.SIGNAL('splashUpdate(QString, int)'),
                    self.splash.showMessage)
         self.setupUi(self)
-        self.scaner= daq_worker()
+        self.set_ui_display_orders()
+        self.gb_capacitance.setEnabled(False)
+        self.gb_impedance.setEnabled(False)
+        self.gb_error_filters.setEnabled(False)
+        
         # Cargamos archivo de configuracion predeterminado
         # Estudiar caso en que el archivo de configuracion no exista
         self.config = ConfigObj('hp4192a.ini')
-        
+        from hp4192a.ploter.qtmatplotlib import NavigationToolbar
         # Inicializando base de ploteo para daq mainplot Data Analisys Tab
-        self.vbl_gb_plota = QtGui.QVBoxLayout(self.gb_plota)
-        self.plota_canvas = PlotCanvas(self.gb_plota)
-        self.vbl_gb_plota.insertWidget(0, self.plota_canvas)
-
-        
+        self.vbl_tab_plot_a = QtGui.QVBoxLayout(self.tab_plot_a)
+        self.plota_canvas = PlotCanvas(self.tab_plot_a)
+        self.vbl_tab_plot_a.insertWidget(0, self.plota_canvas)
+        self.plot_a_tb = NavigationToolbar(self.plota_canvas, self.tab_plot_a)
+        self.vbl_tab_plot_a.insertWidget(1, self.plot_a_tb)
+        self.cbx_x_plot_a.setCurrentIndex(2)
+        self.cbx_y_plot_a.setCurrentIndex(0)
         # Inicializando base de ploteo para daq mainplot Data Analisys Tab
-        self.vbl_gb_plotb = QtGui.QVBoxLayout(self.gb_plotb)
-        self.plotb_canvas = PlotCanvas(self.gb_plotb)
-        self.vbl_gb_plotb.insertWidget(0, self.plotb_canvas)
-
+        self.vbl_tab_plot_b = QtGui.QVBoxLayout(self.tab_plot_b)
+        self.plotb_canvas = PlotCanvas(self.tab_plot_b)
+        self.vbl_tab_plot_b.insertWidget(0, self.plotb_canvas)
+        self.plot_b_tb = NavigationToolbar(self.plotb_canvas, self.tab_plot_b)
+        self.vbl_tab_plot_b.insertWidget(1, self.plot_b_tb)
+        self.cbx_x_plot_b.setCurrentIndex(2)
+        self.cbx_y_plot_b.setCurrentIndex(1)
         
     def connect_thread(self):
+        
         self.emit(QtCore.SIGNAL("splashUpdate(QString, int)"),
                   'Connect to thread . . .',
                   132)
+        self.scaner= daq_worker()
         # Configurar subproceso encargado de la comunicacion con el OMA
         self.thread = QtCore.QThread()
         self.thread.started.connect(self.scaner.adquire)
         self.connect(self.scaner, QtCore.SIGNAL("finished()"), self.thread.quit)
         # Conectar señales y funciones
-        self.connect(self.scaner, QtCore.SIGNAL("readsignal(PyQt_PyObject)"), self.incoming_data)
+        self.connect(self.scaner, QtCore.SIGNAL("readsignal()"), self.incoming_data)
         #self.connect(self.scaner, QtCore.SIGNAL("msgsignal(PyQt_PyObject)"), self.change_messagge)
-        self.connect(self.scaner, QtCore.SIGNAL("finished()"), self.update_ui)
 
         self.scaner.moveToThread(self.thread)
         
@@ -159,6 +173,25 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
                 # Agregar configuraciones disponibles al campo de seleccion
                 self.cbx_serial_bytesizes.addItem(str(bytesize), bytesize)
     
+    def set_ui_display_orders(self):
+        from hp4192a.instrument.funciones import orders as orders
+        self.cbx_file_display_a_order.addItem('Pico', orders['p'][1])
+        self.cbx_file_display_b_order.addItem('Pico', orders['p'][1])
+        self.cbx_file_display_a_order.addItem('Nano', orders['n'][1])
+        self.cbx_file_display_b_order.addItem('Nano', orders['n'][1])
+        self.cbx_file_display_a_order.addItem('Micro', orders['u'][1])
+        self.cbx_file_display_b_order.addItem('Micro', orders['u'][1])
+        self.cbx_file_display_a_order.addItem('Mili', orders['m'][1])
+        self.cbx_file_display_b_order.addItem('Mili', orders['m'][1])
+        self.cbx_file_display_a_order.addItem('Base', orders['base'][1])
+        self.cbx_file_display_a_order.setCurrentIndex(4)
+        self.cbx_file_display_b_order.addItem('Base', orders['base'][1])
+        self.cbx_file_display_b_order.setCurrentIndex(4)
+        self.cbx_file_display_a_order.addItem('Kilo', orders['k'][1])
+        self.cbx_file_display_b_order.addItem('Kilo', orders['k'][1])        
+        self.cbx_file_display_a_order.addItem('Mega', orders['M'][1])
+        self.cbx_file_display_b_order.addItem('Mega', orders['M'][1])
+        
     @QtCore.pyqtSlot()
     def on_cbx_serial_port_currentIndexChanged(self):
         port = self.cbx_serial_port.itemData(self.cbx_serial_port_currentIndex())
@@ -205,29 +238,124 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
     
     @QtCore.pyqtSlot()
     def incoming_data(self):
-        pass
-    
-    def check_data_integrity(self, data):
-        if data[2][1][0] and not data[2][1][1]:
-            return False
+        sep = '\t' if self.config['fileFormat']['column_sep'] == 'Tab' else ','
+        rawpath=self.le_outputfile.text()+'.raw'
         
+        if os.path.isfile(rawpath):
+            rawfile=open(rawpath, 'r')
+            
+            if len(rawfile.readlines()) >= 5:
+    
+                t, f, da, db = np.genfromtxt(rawpath,
+                                             dtype='float',
+                                             delimiter=sep,
+                                             usecols=(0,1,2,3),
+                                             unpack=True
+                                             )
+            
+                vars_to_plot={'t':t,'a':da, 'f':f, 'b':db}  
+                #self.plota_canvas.axes.cla()
+                
+                self.plota_canvas.plot(vars_to_plot[self.cbx_x_plot_a.itemData(self.cbx_x_plot_a.currentIndex())],
+                                        vars_to_plot[self.cbx_y_plot_a.itemData(self.cbx_y_plot_a.currentIndex())])
+                #self.plotb_canvas.axes.cla()
+                self.plotb_canvas.plot(vars_to_plot[self.cbx_x_plot_b.itemData(self.cbx_x_plot_b.currentIndex())],
+                                        vars_to_plot[self.cbx_y_plot_b.itemData(self.cbx_y_plot_b.currentIndex())])
+            
+    #          if self.check_data_units_integrity(data):
+    #                 data = self.set_untis_order(data)
+    #                 if self.check_for_error_values([data[1],data[2][0],data[3][0]], [f[-1],da[-1],db[-1]]):
+    #                     rawfile = open(rawpath,'a')
+    #                     line = str(data[0])+sep+"{0:.4f}".format(data[1])+sep+"{0:.12f}".format(data[2][0])+sep+"{0:.12f}".format(data[3][0])+'\n'
+    #                     rawfile.write(line)
+            else:
+                self.change_message('Esperando datos validos para plotear')
+    
+            rawfile.close()
+        
+    def check_for_error_values(self, data, data2):
+        f_start = self.dsb_f_start.value()
+        f_stop = self.dsb_f_stop.value()
+        f_steep = self.dsb_f_step.value()
+         
+        if abs (abs(data[0])-abs(data2[0])) < (10*abs(data[0])/100):
+            pass
+        else:
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[0])+' , '+'{0:.12f}'.format(data2[0])+' , {0:.12f}'.format(10*data[0]/100)
+            print (msg)
+            self.change_message(msg)
+            return False
+        if abs(abs(data[1])-abs(data2[1])) < (10*abs(data[1])/100):
+            pass
+        else:
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[1])+' , '+'{0:.12f}'.format(data2[1])+' , {0:.12f}'.format(10*data[1]/100)
+            print (msg)
+            self.change_message(msg)
+            return False
+        if abs (abs(data[2])-abs(data2[2])) < (10*abs(data[2])/100):
+            pass
+        else:
+            msg='Medicion con errores frecuencia:'+'{0:.4f}'.format(data[2])+' , '+'{0:.12f}'.format(data2[2])+' , {0:.12f}'.format(10*data[2]/100)
+            print (msg)
+            self.change_message(msg)
+            return False        
+        return True
+    
+    def enable_ui_controls(self, enable):
+        
+        self.plot_settings.setEnabled(enable)
+        self.save_data_settings.setEnabled(enable)
+        self.config_inputs.setEnabled(enable)
+        
+    def change_message(self, msg):
+        self.statusBar().showMessage(msg, 5000) 
+           
     @QtCore.pyqtSlot()
     def on_pb_start_pressed(self):
-        pass
-    
-    @QtCore.pyqtSlot()
-    def on_pb_monitor_pressed(self):
-        pass
-    
-    @QtCore.pyqtSlot()
-    def on_pb_reset_pressed(self):
-        pass    
-    
+        if self.pb_start.text() == 'Start':
+            self.plota_canvas.axes.cla()
+            self.plotb_canvas.axes.cla()
+            try:
+                ofile = open(self.le_outputfile.text(),'w')
+                outputfile=self.le_outputfile.text()+'.raw'
+            except:
+                self.change_message('Seleccione un archivo de salida válido')
+                return False
+#             if self.dsb_f_start.value() == self.dsb_f_stop.value():
+#                 self.change_message('Corregir Sweep de Frecuencio START = END')
+#                 return False
+#             if self.dsb_f_start.value() > self.dsb_f_stop.value():
+#                 self.change_message('Corregir Sweep de Frecuencio START > END')
+#                 return False
+#             if self.dsb_f_step.value() == 0 :
+#                 self.change_message('Corregir Sweep de Frecuencio STEEP = 0')
+#                 return False
+            self.pb_start.setEnabled(False)
+            self.pb_start.setText('Stop')
+            da_order = self.cbx_file_display_a_order.itemData(self.cbx_file_display_a_order.currentIndex())
+            db_order = self.cbx_file_display_b_order.itemData(self.cbx_file_display_b_order.currentIndex())
+            self.scaner.adquire(4, outputfile, da_order, db_order)
+            self.enable_ui_controls(False)
+            self.pb_start.setEnabled(True)
+            
+        elif self.pb_start.text()=='Stop':
+            self.pb_start.setEnabled(False)
+            self.scaner.exiting=True
+            while self.scaner.isRunning():
+                self.change_message('Terminando última medicion')
+            self.scaner.terminate()
+            self.connect_thread()
+            self.get_serial_config()
+            self.enable_ui_controls(True)
+            self.pb_start.setText('Start')
+            self.pb_start.setEnabled(True)
+            
+        
     @QtCore.pyqtSlot()
     def on_tlb_output_file_released(self):
         filepath=QtGui.QFileDialog.getSaveFileName(self, 'Select Output File', os.path.expanduser('~'))
         self.le_outputfile.setText(filepath)
-    
+        
 def main():
     app = QtGui.QApplication(sys.argv)
     app.processEvents()
@@ -237,9 +365,10 @@ def main():
         # Do something which takes some time.
         t = time.time()
         if i == 10:
-            DAQ.get_serial_config()
-        if i == 80:
             DAQ.connect_thread()
+            
+        if i == 80:
+            DAQ.get_serial_config()
         while time.time() < t + 0.03:
             app.processEvents()
     DAQ.show()
