@@ -27,7 +27,6 @@ class daq_worker(QtCore.QThread):
                 self.delay=1/data_per_second
             else:
                 self.delay=0
-            print (outputfile)
             self.output = outputfile
             self.da_order = da_order
             self.db_order = db_order

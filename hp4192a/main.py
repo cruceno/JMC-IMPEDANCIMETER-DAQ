@@ -316,8 +316,9 @@ class HP4192AuiAPP(QtGui.QMainWindow, Ui_HP4192A):
             self.plota_canvas.axes.cla()
             self.plotb_canvas.axes.cla()
             try:
-                ofile = open(self.le_outputfile.text(),'w')
                 outputfile=self.le_outputfile.text()+'.raw'
+                ofile = open(outputfile,'w')
+                
             except:
                 self.change_message('Seleccione un archivo de salida válido')
                 return False
